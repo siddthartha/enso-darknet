@@ -20,7 +20,8 @@ image = "0.23"
 sha2 = "0.8"
 hex = "0.4"
 anyhow = "1.0"
-tch = { version = "0.13.0", features = ["cpython"] }
+tch = { version = "0.13.0", features = ["cpython", "image", "regex"] }
+regex = "1.8.1"
 #diffusers = "0.2.1"
 
 #hyper = "0.14.20"
