@@ -12,7 +12,8 @@ ENV LIBTORCH=/enso-darknet/libtorch
 ARG LIBTORCH=/enso-darknet/libtorch
 
 RUN wget https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-2.0.1%2Bcpu.zip \
-    && unzip ./libtorch-cxx11-abi-shared-with-deps-2.0.1+cpu.zip
+    && unzip ./libtorch-cxx11-abi-shared-with-deps-2.0.1+cpu.zip \
+    && rm -f ./libtorch-cxx11-abi-shared-with-deps-2.0.1+cpu.zip
 
 COPY ./Cargo.toml ./Cargo.toml
 COPY ./src ./src
@@ -41,13 +42,15 @@ ENV LD_LIBRARY_PATH=${LIBTORCH}/lib:${LD_LIBRARY_PATH}
 #ENV LIBRARY_PATH=/enso-darknet/libtorch/lib:${LIBRARY_PATH}
 
 
-ENV PATH=/usr/bin:${PATH}
+ENV PATH=/enso-darknet:${PATH}
 RUN cp /usr/bin/python3 /usr/bin/python
 
 RUN \
     cargo build --release \
     && cp /enso-darknet/target/release/enso-darknet ./enso-darknet \
-    && cargo clean
+    && cargo clean \
+    && rm -rf ${CARGO_HOME}/registry/* \
+    && rm -rf /enso-darknet/libtorch/include
 
 #RUN rustup target add x86_64-unknown-linux-musl \
 #    && cargo build --release
