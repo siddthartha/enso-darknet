@@ -1,4 +1,4 @@
-FROM rust:latest as builder
+FROM rust:latest as rustBuilder
 
 RUN USER=root cargo new --bin enso-darknet
 WORKDIR /enso-darknet
@@ -8,16 +8,25 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/* \
     && rm -rf ./src
 
-ENV LIBTORCH=/enso-darknet/libtorch
-ARG LIBTORCH=/enso-darknet/libtorch
+##
+## libtorch binaries
+##
 
 RUN wget https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-2.0.1%2Bcpu.zip \
     && unzip ./libtorch-cxx11-abi-shared-with-deps-2.0.1+cpu.zip \
     && rm -f ./libtorch-cxx11-abi-shared-with-deps-2.0.1+cpu.zip
 
+ENV LIBTORCH=/enso-darknet/libtorch
+ARG LIBTORCH=/enso-darknet/libtorch
+#ENV LIBTORCH_LIB={$LIBTORCH}/lib
+#ENV LIBTORCH_INCLUDE=${LIBTORCH}/include
+
 COPY ./Cargo.toml ./Cargo.toml
 COPY ./src ./src
 
+##
+## PyTorch via miniconda
+##
 
 #ENV PATH="/root/miniconda3/bin:${PATH}"
 #ARG PATH="/root/miniconda3/bin:${PATH}"
@@ -34,13 +43,11 @@ COPY ./src ./src
 #ENV LIBTORCH=/root/miniconda3/lib/python3.10/site-packages/torch/
 
 ENV LD_LIBRARY_PATH=${LIBTORCH}/lib:${LD_LIBRARY_PATH}
+ENV DEP_TCH_LIBTORCH_LIB=${LIBTORCH}/lib
 
-#ENV LIBTORCH_LIB={$LIBTORCH}/lib
-#ENV LIBTORCH_INCLUDE=${LIBTORCH}/include
-#ENV C_INCLUDE_PATH=/enso-darknet/libtorch/include/:${C_INCLUDE_PATH}
+#ENV C_INCLUDE_PATH=/enso-darknet/libtorch/include:${C_INCLUDE_PATH}
 #ENV CPLUS_INCLUDE_PATH=/enso-darknet/libtorch/include:${CPLUS_INCLUDE_PATH}
 #ENV LIBRARY_PATH=/enso-darknet/libtorch/lib:${LIBRARY_PATH}
-
 
 ENV PATH=/enso-darknet:${PATH}
 RUN cp /usr/bin/python3 /usr/bin/python
@@ -51,6 +58,15 @@ RUN \
     && cargo clean \
     && rm -rf ${CARGO_HOME}/registry/* \
     && rm -rf /enso-darknet/libtorch/include
+
+COPY ./data ./data
+
+CMD ["./enso-darknet"]
+ENTRYPOINT ["./enso-darknet"]
+
+##
+## Alpine
+##
 
 #RUN rustup target add x86_64-unknown-linux-musl \
 #    && cargo build --release
@@ -79,5 +95,5 @@ RUN \
 
 #USER ${USER_NAME}
 
-CMD ./enso-darknet
+#CMD ./enso-darknet
 
