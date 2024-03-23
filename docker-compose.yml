@@ -1,0 +1,16 @@
+version: "3.3"
+
+services:
+
+  enso-darknet:
+    image: dogen/enso-darknet:latest
+    environment:
+      - SD_VERSION=v2_1
+    command: >
+        bash -c "true
+        && sleep infinity
+        "
+    networks:
+      - default
+networks:
+  default:

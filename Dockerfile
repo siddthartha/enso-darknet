@@ -23,6 +23,8 @@ ARG LIBTORCH=/enso-darknet/libtorch
 
 COPY ./Cargo.toml ./Cargo.toml
 COPY ./src ./src
+COPY ./download-weights.sh ./dowload-weights.sh
+COPY ./convert-weights.sh ./convert-weights.sh
 
 ##
 ## PyTorch via miniconda
@@ -55,14 +57,16 @@ RUN cp /usr/bin/python3 /usr/bin/python
 RUN \
     cargo build --release \
     && cp /enso-darknet/target/release/enso-darknet ./enso-darknet \
+    && cp /enso-darknet/target/release/tensor-tool ./tensor-tool \
     && cargo clean \
     && rm -rf ${CARGO_HOME}/registry/* \
     && rm -rf /enso-darknet/libtorch/include
 
 COPY ./data ./data
+COPY ./media ./media
 
-CMD ["./enso-darknet"]
-ENTRYPOINT ["./enso-darknet"]
+#CMD ["./enso-darknet"]
+#ENTRYPOINT ["./enso-darknet"]
 
 ##
 ## Alpine

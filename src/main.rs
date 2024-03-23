@@ -98,7 +98,7 @@ struct Args {
     #[arg(long, value_name = "FILE")]
     vae_weights: Option<String>,
 
-    #[arg(long, value_name = "FILE", default_value = "data/bpe_simple_vocab_16e6.txt")]
+    #[arg(long, value_name = "FILE", default_value = "data/vocab_16e6.txt")]
     /// The file specifying the vocabulary to used for tokenization.
     vocab_file: String,
 
@@ -145,8 +145,8 @@ impl Args {
         match &self.clip_weights {
             Some(w) => w.clone(),
             None => match self.sd_version {
-                StableDiffusionVersion::V1_5 => "data/pytorch_model.safetensors".to_string(),
-                StableDiffusionVersion::V2_1 => "data/clip_v2.1.safetensors".to_string(),
+                StableDiffusionVersion::V1_5 => "data/clip-1.5.safetensors".to_string(),
+                StableDiffusionVersion::V2_1 => "data/clip-2.1.safetensors".to_string(),
             },
         }
     }
@@ -155,8 +155,8 @@ impl Args {
         match &self.vae_weights {
             Some(w) => w.clone(),
             None => match self.sd_version {
-                StableDiffusionVersion::V1_5 => "data/vae.safetensors".to_string(),
-                StableDiffusionVersion::V2_1 => "data/vae_v2.1.safetensors".to_string(),
+                StableDiffusionVersion::V1_5 => "data/vae-1.5.safetensors".to_string(),
+                StableDiffusionVersion::V2_1 => "data/vae-2.1.safetensors".to_string(),
             },
         }
     }
@@ -165,8 +165,8 @@ impl Args {
         match &self.unet_weights {
             Some(w) => w.clone(),
             None => match self.sd_version {
-                StableDiffusionVersion::V1_5 => "data/unet.safetensors".to_string(),
-                StableDiffusionVersion::V2_1 => "data/unet_v2.1.safetensors".to_string(),
+                StableDiffusionVersion::V1_5 => "data/unet-1.5.safetensors".to_string(),
+                StableDiffusionVersion::V2_1 => "data/unet-2.1.safetensors".to_string(),
             },
         }
     }
