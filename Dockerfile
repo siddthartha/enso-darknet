@@ -23,7 +23,7 @@ ARG LIBTORCH=/enso-darknet/libtorch
 
 COPY ./Cargo.toml ./Cargo.toml
 COPY ./src ./src
-COPY ./download-weights.sh ./dowload-weights.sh
+COPY ./download-weights.sh ./download-weights.sh
 COPY ./convert-weights.sh ./convert-weights.sh
 
 ##

@@ -10,6 +10,8 @@ services:
         bash -c "true
         && sleep infinity
         "
+    volumes:
+      - ./data:/enso-darknet/data
     networks:
       - default
 networks:
