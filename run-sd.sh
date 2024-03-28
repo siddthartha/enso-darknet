@@ -1,10 +1,10 @@
 #!/bin/bash
 
-docker run \
-    -v ./data:/enso-darknet/data \
-    -v ./media:/enso-darknet/media \
-    dogen/enso-darknet enso-darknet \
-    --clip-weights ./data/clip_v2.1.ot \
-    --vae-weights ./data/vae_v2.1.ot \
-    --unet-weights ./data/unet_v2.1.ot \
-    --vocab-file ./data/vocab_v2.1.txt
+docker-compose exec \
+    enso-darknet ./enso-darknet \
+    --clip-weights ./data/clip-2.1.ot \
+    --vae-weights ./data/vae-2.1.ot \
+    --unet-weights ./data/unet-2.1.ot \
+    --vocab-file ./data/bpe_simple_vocab_16e6.txt \
+    --n-steps 5 \
+    --final-image ./media/output.jpg

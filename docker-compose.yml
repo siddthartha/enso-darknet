@@ -12,6 +12,8 @@ services:
         "
     volumes:
       - ./data:/enso-darknet/data
+      - ./media:/enso-darknet/media
+      - ./src:/enso-darknet/src
     networks:
       - default
 networks:

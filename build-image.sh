@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker build -t dogen/enso-darknet .
+docker build -t dogen/enso-darknet:latest .

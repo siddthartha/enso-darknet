@@ -1,3 +1,4 @@
+use std::arch::x86_64::_rdrand64_step;
 // Stable Diffusion implementation inspired:
 // - Huggingface's amazing diffuser Python api: https://huggingface.co/blog/annotated-diffusion
 // - Huggingface's (also amazing) blog post: https://huggingface.co/blog/annotated-diffusion
@@ -111,7 +112,7 @@ struct Args {
     n_steps: usize,
 
     /// The random seed to be used for the generation.
-    #[arg(long, default_value_t = 32)]
+    #[arg(long, default_value_t = 0)]
     seed: i64,
 
     /// The number of samples to generate.
@@ -119,7 +120,7 @@ struct Args {
     num_samples: i64,
 
     /// The name of the final image to generate.
-    #[arg(long, value_name = "FILE", default_value = "sd_final.png")]
+    #[arg(long, value_name = "FILE", default_value = "output.png")]
     final_image: String,
 
     /// Use autocast (disabled by default as it may use more memory in some cases).
@@ -145,8 +146,8 @@ impl Args {
         match &self.clip_weights {
             Some(w) => w.clone(),
             None => match self.sd_version {
-                StableDiffusionVersion::V1_5 => "data/clip-1.5.safetensors".to_string(),
-                StableDiffusionVersion::V2_1 => "data/clip-2.1.safetensors".to_string(),
+                StableDiffusionVersion::V1_5 => "data/clip-1.5.ot".to_string(),
+                StableDiffusionVersion::V2_1 => "data/clip-2.1.ot".to_string(),
             },
         }
     }
@@ -155,8 +156,8 @@ impl Args {
         match &self.vae_weights {
             Some(w) => w.clone(),
             None => match self.sd_version {
-                StableDiffusionVersion::V1_5 => "data/vae-1.5.safetensors".to_string(),
-                StableDiffusionVersion::V2_1 => "data/vae-2.1.safetensors".to_string(),
+                StableDiffusionVersion::V1_5 => "data/vae-1.5.ot".to_string(),
+                StableDiffusionVersion::V2_1 => "data/vae-2.1.ot".to_string(),
             },
         }
     }
@@ -165,8 +166,8 @@ impl Args {
         match &self.unet_weights {
             Some(w) => w.clone(),
             None => match self.sd_version {
-                StableDiffusionVersion::V1_5 => "data/unet-1.5.safetensors".to_string(),
-                StableDiffusionVersion::V2_1 => "data/unet-2.1.safetensors".to_string(),
+                StableDiffusionVersion::V1_5 => "data/unet-1.5.ot".to_string(),
+                StableDiffusionVersion::V2_1 => "data/unet-2.1.ot".to_string(),
             },
         }
     }
@@ -199,7 +200,7 @@ fn output_filename(
     }
 }
 
-fn run(args: Args) -> anyhow::Result<()> {
+fn run(args: Args, seed1: i64) -> anyhow::Result<()> {
     let clip_weights = args.clip_weights();
     let vae_weights = args.vae_weights();
     let unet_weights = args.unet_weights();
@@ -209,7 +210,7 @@ fn run(args: Args) -> anyhow::Result<()> {
         height,
         width,
         n_steps,
-        seed,
+//        seed,
         vocab_file,
         final_image,
         sliced_attention_size,
@@ -260,8 +261,9 @@ fn run(args: Args) -> anyhow::Result<()> {
     let unet = sd_config.build_unet(&unet_weights, unet_device, 4)?;
 
     let bsize = 1;
+
     for idx in 0..num_samples {
-        tch::manual_seed(seed + idx);
+        tch::manual_seed(seed1 + idx);
         let mut latents = Tensor::randn(
             [bsize, 4, sd_config.height / 8, sd_config.width / 8],
             (Kind::Float, unet_device),
@@ -308,9 +310,15 @@ fn run(args: Args) -> anyhow::Result<()> {
 
 fn main() -> anyhow::Result<()> {
     let args = Args::parse();
+    let mut final_seed:u64 = args.seed as u64;
+
+    if args.seed == 0 {
+        unsafe { _rdrand64_step(&mut final_seed); }
+    }
+
     if !args.autocast {
-        run(args)
+        run(args, final_seed as i64)
     } else {
-        tch::autocast(true, || run(args))
+        tch::autocast(true, || run(args, final_seed as i64))
     }
 }
