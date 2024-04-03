@@ -1,9 +1,7 @@
 #!/bin/bash
 
-docker run \
-    -v ./data:/enso-darknet/data \
-    -v ./media:/enso-darknet/media \
-    dogen/enso-darknet ./sd-cli \
+docker-compose exec \
+    enso-darknet cargo run --bin sd-cli -- \
     --clip-weights ./data/clip-2.1.ot \
     --vae-weights ./data/vae-2.1.ot \
     --unet-weights ./data/unet-2.1.ot \

@@ -1,0 +1,33 @@
+##
+## Alpine
+##
+
+#RUN rustup target add x86_64-unknown-linux-musl \
+#    && cargo build --release
+#    && RUSTFLAGS='-C target-feature=+crt-static' cargo build --release --target x86_64-unknown-linux-gnu
+
+#FROM alpine:latest
+
+#ARG APP_DIR=/app
+#ARG USER_NAME=app
+#ARG GROUP_NAME=app
+
+#WORKDIR ${APP_DIR}
+
+#RUN addgroup -S ${GROUP_NAME} && adduser -S ${USER_NAME} ${GROUP_NAME}
+
+#RUN apk --no-cache add ca-certificates wget gcc libstdc++6 \
+#    && wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub \
+#    && wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.31-r0/glibc-2.31-r0.apk \
+#    && apk add --force-overwrite glibc-2.31-r0.apk \
+#    && apk fix --force-overwrite alpine-baselayout-data
+
+#COPY --from=builder /enso-darknet/target/release/enso-darknet ${APP_DIR}/enso-darknet
+
+#RUN chown ${USER_NAME}:${GROUP_NAME} ${APP_DIR}/enso-darknet \
+#  && chmod a+x ${APP_DIR}/enso-darknet
+
+#USER ${USER_NAME}
+
+#CMD ./enso-darknet
+
