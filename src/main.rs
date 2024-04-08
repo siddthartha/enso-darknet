@@ -2,8 +2,10 @@ use std::arch::x86_64::_rdrand64_step;
 use serde::Serialize;
 use warp::{reply::json, Filter, Rejection, Reply};
 use uuid::Uuid;
+use redis;
+use redis::{AsyncCommands};
 
-type WebResult<T> = std::result::Result<T, Rejection>;
+type WebResult<T> = Result<T, Rejection>;
 
 #[derive(Serialize)]
 pub struct GenericResponse {
@@ -21,11 +23,17 @@ pub async fn health_checker_handler() -> WebResult<impl Reply>
         _rdrand64_step(&mut high64_seed);
     }
 
+    let uuid = Uuid::from_u64_pair(low64_seed, high64_seed).to_string().clone();
+
     let response_json = &GenericResponse {
         status: false,
-        uuid: Uuid::from_u64_pair(low64_seed, high64_seed).to_string(),
+        uuid: uuid.clone(),
     };
 
+    let client = redis::Client::open("redis://redis:6379/").unwrap();
+    let mut publish_conn = client.get_tokio_connection().await.unwrap();
+
+    publish_conn.publish::<&str, &str, i8>("wavephone", uuid.as_str()).await.unwrap();
 
     Ok(json(response_json))
 }
