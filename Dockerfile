@@ -34,11 +34,11 @@ RUN \
     cargo build --release \
     && cp /enso-darknet/target/release/enso-darknet ./enso-darknet \
     && cp /enso-darknet/target/release/tensor-tool ./tensor-tool \
-    && cp /ensp-darknet/target/release/sd-cli ./sd-cli \
-    && cargo clean
-
-#    && rm -rf ${CARGO_HOME}/registry/* \
-#    && rm -rf /enso-darknet/libtorch/include
+    && cp /enso-darknet/target/release/sd-cli ./sd-cli \
+    && cp /enso-darknet/target/release/sd-worker ./sd-worker \
+    && cargo clean \
+    && rm -rf ${CARGO_HOME}/registry/* \
+    && rm -rf /enso-darknet/libtorch/include
 
 COPY ./download-weights.sh ./download-weights.sh
 COPY ./convert-weights.sh ./convert-weights.sh
@@ -46,5 +46,5 @@ COPY ./convert-weights.sh ./convert-weights.sh
 COPY ./data ./data
 COPY ./media ./media
 
-#CMD ["./enso-darknet"]
-#ENTRYPOINT ["./enso-darknet"]
+CMD ["./enso-darknet"]
+ENTRYPOINT ["./enso-darknet"]

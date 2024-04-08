@@ -42,6 +42,15 @@ bench = false
 
 [[bin]]
 name = "tensor-tool"
+path = "./src/bin/tensor-tool.rs"
+
+[[bin]]
+name = "sd-cli"
+path = "./src/bin/sd-cli.rs"
+
+[[bin]]
+name = "sd-worker"
+path = "./src/bin/sd-worker.rs"
 
 [profile.release]
 opt-level = 'z'     # Optimize for size.
