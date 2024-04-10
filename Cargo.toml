@@ -2,7 +2,7 @@
 name = "enso-darknet"
 version = "0.1.1"
 edition = "2021"
-author = ["Sadovnikov Anton <sadovnikoff@gmail.com>"]
+authors = ["Sadovnikov Anton <sadovnikoff@gmail.com>"]
 
 description = "Stable diffusion pipeline service"
 repository = "https://github.com/siddthartha/enso-darknet"
@@ -39,10 +39,6 @@ redis = { version = "0.22.2", features = ["tokio-comp"] }
 [lib]
 crate-type = ["lib"]
 bench = false
-
-[[bin]]
-name = "tensor-tool"
-path = "./src/bin/tensor-tool.rs"
 
 [[bin]]
 name = "sd-cli"

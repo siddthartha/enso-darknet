@@ -47,4 +47,3 @@ COPY ./data ./data
 COPY ./media ./media
 
 CMD ["./enso-darknet"]
-ENTRYPOINT ["./enso-darknet"]
