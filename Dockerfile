@@ -41,7 +41,6 @@ RUN \
     && rm -rf /enso-darknet/libtorch/include
 
 COPY ./download-weights.sh ./download-weights.sh
-COPY ./convert-weights.sh ./convert-weights.sh
 
 COPY ./data ./data
 COPY ./media ./media
