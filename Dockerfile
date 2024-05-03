@@ -19,8 +19,6 @@ RUN wget https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-wit
 
 ENV LIBTORCH=/enso-darknet/libtorch
 ARG LIBTORCH=/enso-darknet/libtorch
-#ENV LIBTORCH_LIB={$LIBTORCH}/lib
-#ENV LIBTORCH_INCLUDE=${LIBTORCH}/include
 
 COPY ./Cargo.toml ./Cargo.toml
 COPY ./src ./src
