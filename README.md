@@ -1,8 +1,14 @@
 # enso-darknet
 
-A `Stable Diffusion` pipeline implemented on Rust using `libtorch`, and packed to a docker image.
+A simple asynchronuous json API for running `Stable Diffusion` generation tasks via Redis queue.
 
-> Based on examples from `tch-rs` crate.
+> Pipeline based on examples from `LaurentMazare/diffusers-rs` crate.
+
+## TODO:
+
+* put results to S3
+* add other various pipelines (OpenGPT etc.)
+
 
 ### Usage
 
@@ -26,5 +32,7 @@ docker run \
   * `docker-compose up -d`
   * `wget http://localhost:80/run-job/?prompt=Some%20prompt`
 
-### You can donate my work on this repository
+
+# You can donate my work on this repository
+
 > USDT/TRC20 address `TWwumLM9UXZbZdW8ySqWNNNkoqvQJ8PMdK`
