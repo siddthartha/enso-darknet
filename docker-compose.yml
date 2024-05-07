@@ -11,8 +11,8 @@ services:
     ports:
       - "80:80"
     command: >
-      bash -c "true
-      && ./enso-darknet
+      bash -c "true \
+      && (./sd-worker & ./enso-darknet)
       "
     volumes:
       - ./data:/enso-darknet/data
