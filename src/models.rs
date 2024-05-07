@@ -6,3 +6,9 @@ pub struct SDRequest {
     pub prompt: String,
     pub seed: i64,
 }
+
+#[derive(Serialize)]
+pub struct HealthcheckResponse {
+    pub status: bool,
+    pub uuid: String,
+}

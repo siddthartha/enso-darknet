@@ -1,49 +1,22 @@
 mod models;
 
 use std::arch::x86_64::_rdrand64_step;
-use serde::Serialize;
 use warp::{reply::json, Filter, Rejection, Reply};
-use uuid::Uuid;
 use redis;
 use redis::{AsyncCommands};
 
+use enso_darknet::generate_uuid_v4;
 use models::SDRequest;
+use models::HealthcheckResponse;
 
 type WebResult<T> = Result<T, Rejection>;
 
-#[derive(Serialize)]
-pub struct GenericResponse {
-    pub status: bool,
-    pub uuid: String,
-}
-
-pub fn generate_uuid_v4() -> String
-{
-    let mut low64_seed: u64 = 0;
-    let mut high64_seed: u64 = 0;
-
-    unsafe {
-        _rdrand64_step(&mut low64_seed);
-        _rdrand64_step(&mut high64_seed);
-    }
-
-    let uuid = Uuid::from_u64_pair(low64_seed, high64_seed).to_string().clone();
-    uuid
-}
-
 pub async fn health_checker_handler() -> WebResult<impl Reply>
 {
-    let mut low64_seed: u64 = 0;
-    let mut high64_seed: u64 = 0;
 
-    unsafe {
-        _rdrand64_step(&mut low64_seed);
-        _rdrand64_step(&mut high64_seed);
-    }
+    let uuid = generate_uuid_v4();
 
-    let uuid = Uuid::from_u64_pair(low64_seed, high64_seed).to_string().clone();
-
-    let response_json = &GenericResponse {
+    let response = &HealthcheckResponse {
         status: false,
         uuid: uuid.clone(),
     };
@@ -53,7 +26,7 @@ pub async fn health_checker_handler() -> WebResult<impl Reply>
 
     publish_conn.publish::<&str, &str, i8>("render", uuid.as_str()).await.unwrap();
 
-    Ok(json(response_json))
+    Ok(json(response))
 }
 
 // A function to handle GET requests at /render

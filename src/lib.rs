@@ -1,3 +1,5 @@
+use std::arch::x86_64::_rdrand64_step;
+use uuid::Uuid;
 use diffusers::pipelines::stable_diffusion;
 use diffusers::transformers::clip;
 use tch::{nn::Module, Device, Kind, Tensor};
@@ -231,7 +233,16 @@ impl StableDiffusionTask {
 
 }
 
-pub extern fn testlibrary()
+pub fn generate_uuid_v4() -> String
 {
-    println!("test")
+    let mut low64_seed: u64 = 0;
+    let mut high64_seed: u64 = 0;
+
+    unsafe {
+        _rdrand64_step(&mut low64_seed);
+        _rdrand64_step(&mut high64_seed);
+    }
+
+    let uuid = Uuid::from_u64_pair(low64_seed, high64_seed).to_string().clone();
+    uuid
 }
