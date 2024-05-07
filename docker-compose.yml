@@ -4,13 +4,15 @@ services:
 
   enso-darknet:
     image: dogen/enso-darknet:latest
+    env_file:
+      - ./.env
     environment:
       - SD_VERSION=v2_1
     ports:
       - "80:80"
     command: >
       bash -c "true
-      && sleep infinity
+      && ./enso-darknet
       "
     volumes:
       - ./data:/enso-darknet/data

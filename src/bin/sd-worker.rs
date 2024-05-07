@@ -3,11 +3,11 @@ use redis::Client;
 #[tokio::main]
 pub async fn main() -> anyhow::Result<()>
 {
-    let client = Client::open("redis://redis/").unwrap();
+    let client = Client::open("redis://redis:6379/").unwrap();
     let mut tokio_conn = client.get_connection()?;
     let mut pubsub_conn = tokio_conn.as_pubsub();
 
-    pubsub_conn.subscribe("wavephone")?;
+    pubsub_conn.subscribe("render")?;
 
     loop {
         let msg = pubsub_conn.get_message()?;
