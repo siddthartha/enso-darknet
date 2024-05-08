@@ -37,7 +37,7 @@ pub async fn render_handler(q: HashMap<String, String>) -> WebResult<impl Reply>
         Some(prompt) => {
             let request = &SDRequest {
                 uuid: generate_uuid_v4(),
-                prompt: q.get("prompt").unwrap().clone(),
+                prompt: prompt.clone(),
                 seed: seed as i64,
             };
 

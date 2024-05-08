@@ -4,6 +4,8 @@ use diffusers::pipelines::stable_diffusion;
 use diffusers::transformers::clip;
 use tch::{nn::Module, Device, Kind, Tensor};
 
+pub mod models;
+
 const GUIDANCE_SCALE: f64 = 7.5;
 
 pub struct StableDiffusionTask {
