@@ -1,6 +1,7 @@
 mod models;
 mod handlers;
 
+use std::collections::HashMap;
 use warp::{Filter};
 
 use crate::models::SDRequest;
@@ -20,13 +21,14 @@ async fn main()
         .and(warp::get())
         .and_then(health_checker_handler);
 
-    let render_route = warp::path!("api" / "sd" / "render")
+    let render_route = warp::path!("api" / "render")
+        .and(warp::query::<HashMap<String, String>>())
         .and(warp::get())
         .and_then(render_handler);
 
     let routes = health_checker_route
-        .with(warp::log("api"))
-        .or(render_route);
+        .or(render_route)
+        .with(warp::log("api"));
 
     println!("🚀 Enso ML API server started successfully");
     warp::serve(routes).run(([0, 0, 0, 0], 80)).await;
