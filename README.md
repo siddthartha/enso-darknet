@@ -30,7 +30,7 @@ docker run \
 ```
 * Run API and server worker with Redis job queue:
   * `docker-compose up -d`
-  * `wget http://localhost:80/run-job/?prompt=Some%20prompt`
+  * `wget http://localhost:80/api/render/?prompt=Some%20prompt`
 
 
 # You can donate my work on this repository

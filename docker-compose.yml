@@ -19,6 +19,8 @@ services:
       - ./media:/enso-darknet/media
       - ./src:/enso-darknet/src
       - ./Cargo.toml:/enso-darknet/Cargo.toml
+    depends_on:
+      - redis
     networks:
       - default
   redis:
