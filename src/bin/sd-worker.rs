@@ -1,7 +1,8 @@
 use redis::{Client, Commands};
 use std::string::String;
+use tch::Tensor;
 use enso_darknet::models::SDRequest;
-use enso_darknet::{RENDER_QUEUE, TASK_PREFIX};
+use enso_darknet::{RENDER_QUEUE, TASK_PREFIX, StableDiffusionTask, StableDiffusionVersion};
 
 #[tokio::main]
 pub async fn main() -> anyhow::Result<()>
@@ -22,7 +23,44 @@ pub async fn main() -> anyhow::Result<()>
         let request: SDRequest = serde_json::from_str(payload.as_str()).unwrap();
 
         let uuid = request.clone().uuid;
+        let seed= request.clone().seed;
+        let prompt = request.clone().prompt;
 
-        write_connection.set::<String, String, String>(format!("{}:{uuid}", TASK_PREFIX.to_string()).to_string(), payload).unwrap();
+        write_connection.set::<String, String, String>(
+            format!("{}:{uuid}", TASK_PREFIX.to_string()).to_string(),
+            payload
+        ).unwrap();
+
+        let task = StableDiffusionTask {
+            prompt: prompt.clone(),
+            cpu: vec![],
+            height: None,
+            width: None,
+            unet_weights: None,
+            clip_weights: None,
+            vae_weights: None,
+            vocab_file: "data/vocab_16e6.txt".to_string(),
+            sliced_attention_size: None,
+            n_steps: 25,
+            seed: seed.clone(),
+            num_samples: 0,
+            final_image: format!("{}.jpg", uuid.clone().to_string()),
+            autocast: false,
+            sd_version: StableDiffusionVersion::V2_1,
+            intermediary_images: false
+        };
+
+
+        write_connection.set::<String, String, String>(
+            format!("{}:{uuid}", TASK_PREFIX.to_string()).to_string(),
+            serde_json::to_string(&task).unwrap()
+        ).unwrap();
+
+        let final_image = task.final_image.clone();
+        let image: Tensor = StableDiffusionTask::run(task, seed)?;
+
+        let final_image = StableDiffusionTask::output_filename(final_image.as_str(), 1, 0, None);
+
+        tch::vision::image::save(&image, final_image)?;
     }
 }

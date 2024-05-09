@@ -1,4 +1,5 @@
 use std::arch::x86_64::_rdrand64_step;
+use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 use diffusers::pipelines::stable_diffusion;
 use diffusers::transformers::clip;
@@ -10,6 +11,7 @@ pub const GUIDANCE_SCALE: f64 = 7.5;
 pub const RENDER_QUEUE: &str = "render";
 pub const TASK_PREFIX: &str = "task";
 
+#[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct StableDiffusionTask {
     /// The prompt to be used for image generation.
     pub prompt: String,
@@ -60,7 +62,7 @@ pub struct StableDiffusionTask {
     pub intermediary_images: bool,
 }
 
-#[derive(Debug, Clone, Copy, clap::ValueEnum)]
+#[derive(Debug, Deserialize, Serialize, Clone, Copy, clap::ValueEnum)]
 pub enum StableDiffusionVersion {
     V1_5,
     V2_1,
@@ -124,11 +126,11 @@ impl StableDiffusionTask {
         }
     }
 
-    pub fn run(args: StableDiffusionTask, seed: i64) -> Result<Tensor, anyhow::Error>
+    pub fn run(task: StableDiffusionTask, seed: i64) -> Result<Tensor, anyhow::Error>
     {
-        let clip_weights = args.clip_weights();
-        let vae_weights = args.vae_weights();
-        let unet_weights = args.unet_weights();
+        let clip_weights = task.clip_weights();
+        let vae_weights = task.vae_weights();
+        let unet_weights = task.unet_weights();
         let StableDiffusionTask {
             prompt,
             cpu,
@@ -142,7 +144,7 @@ impl StableDiffusionTask {
             num_samples,
             sd_version,
             ..
-        } = args;
+        } = task;
 
         tch::maybe_init_cuda();
 
@@ -213,7 +215,7 @@ impl StableDiffusionTask {
                 noise_pred_uncond + (noise_pred_text - noise_pred_uncond) * GUIDANCE_SCALE;
             latents = scheduler.step(&noise_pred, timestep, &latents);
 
-            if args.intermediary_images {
+            if task.intermediary_images {
                 let latents = latents.to(vae_device);
                 let image = vae.decode(&(&latents / 0.18215));
                 let image = (image / 2 + 0.5).clamp(0., 1.).to_device(Device::Cpu);

@@ -5,7 +5,7 @@ use enso_darknet::{StableDiffusionTask, StableDiffusionVersion};
 
 #[derive(Parser)]
 #[command(author, version, about = "Stable Diffusion 2.1 CLI", long_about = None)]
-pub struct Args {
+pub struct SDCliArgs {
     /// The prompt to be used for image generation.
     #[arg(
     long,
@@ -59,7 +59,7 @@ pub struct Args {
     num_samples: i64,
 
     /// The name of the final image to generate.
-    #[arg(long, value_name = "FILE", default_value = "output.png")]
+    #[arg(long, value_name = "FILE", default_value = "output.jpg")]
     pub final_image: String,
 
     /// Use autocast (disabled by default as it may use more memory in some cases).
@@ -74,7 +74,7 @@ pub struct Args {
     intermediary_images: bool,
 }
 
-fn run(args: Args, seed: i64) -> anyhow::Result<()>
+fn run(args: SDCliArgs, seed: i64) -> anyhow::Result<()>
 {
     let task = StableDiffusionTask {
         prompt: args.prompt,
@@ -106,16 +106,16 @@ fn run(args: Args, seed: i64) -> anyhow::Result<()>
 
 fn main() -> anyhow::Result<()>
 {
-    let args = Args::parse();
-    let mut final_seed: u64 = args.seed as u64;
+    let cli_args = SDCliArgs::parse();
+    let mut final_seed: u64 = cli_args.seed as u64;
 
-    if args.seed == 0 {
+    if cli_args.seed == 0 {
         unsafe { _rdrand64_step(&mut final_seed); }
     }
 
-    if !args.autocast {
-        run(args, final_seed as i64)
+    if !cli_args.autocast {
+        run(cli_args, final_seed as i64)
     } else {
-        tch::autocast(true, || run(args, final_seed as i64))
+        tch::autocast(true, || run(cli_args, final_seed as i64))
     }
 }
