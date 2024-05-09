@@ -17,7 +17,7 @@ async fn main()
     }
     pretty_env_logger::init();
 
-    let health_checker_route = warp::path!("api" / "healthchecker")
+    let health_checker_route = warp::path!("api" / "health")
         .and(warp::get())
         .and_then(health_checker_handler);
 

@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use redis::AsyncCommands;
 use warp::{reject, Rejection, Reply};
 use warp::reply::{json};
-use enso_darknet::generate_uuid_v4;
+use enso_darknet::{generate_uuid_v4, RENDER_QUEUE};
 use serde_json;
 use crate::{HealthcheckResponse, SDRequest};
 
@@ -16,6 +16,7 @@ pub async fn health_checker_handler() -> WebResult<impl Reply>
     let response = &HealthcheckResponse {
         status: false,
         uuid: uuid.clone(),
+        has_cuda: tch::Cuda::is_available(),
     };
 
     Ok(json(response))
@@ -45,7 +46,7 @@ pub async fn render_handler(q: HashMap<String, String>) -> WebResult<impl Reply>
             let mut publish_conn = client.get_tokio_connection().await.unwrap();
 
             publish_conn.publish::<&str, &str, i8>(
-                "render",
+                RENDER_QUEUE,
                 serde_json::to_string(request).unwrap().as_str()
             ).await.unwrap();
 

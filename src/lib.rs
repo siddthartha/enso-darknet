@@ -6,7 +6,9 @@ use tch::{nn::Module, Device, Kind, Tensor};
 
 pub mod models;
 
-const GUIDANCE_SCALE: f64 = 7.5;
+pub const GUIDANCE_SCALE: f64 = 7.5;
+pub const RENDER_QUEUE: &str = "render";
+pub const TASK_PREFIX: &str = "task";
 
 pub struct StableDiffusionTask {
     /// The prompt to be used for image generation.

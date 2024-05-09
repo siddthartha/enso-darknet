@@ -11,4 +11,5 @@ pub struct SDRequest {
 pub struct HealthcheckResponse {
     pub status: bool,
     pub uuid: String,
+    pub has_cuda: bool,
 }
