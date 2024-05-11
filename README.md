@@ -12,8 +12,16 @@ A simple asynchronuous json API for running `Stable Diffusion` generation tasks 
 * put results to S3
 * add other various pipelines (OpenGPT etc.)
 
+### Usage with RunPod
 
-### Usage
+* Create and run default Redis Pod from official image (`redis:latest` for example)
+* Create pod with Enso SD-2.1 community template (https://www.runpod.io/console/explore/2105h5uma5)
+* Set `ENSO_REDIS_HOST=redis://{REDIS_POD_URL}:{REDIS_POD_EXTERNAL_PORT}` variable in that template
+* Get `/render/?prompt=some+prompt` to start processing
+* Take `uuid` field from response
+* Get `/result/{uuid}.jpg` or `/result/{uuid}-{step}.jpg`
+
+### Usage in docker
 
 * `docker pull dogen/enso-darknet:latest`
 * `./download-weights.sh`
