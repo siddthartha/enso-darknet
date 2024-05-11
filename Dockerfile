@@ -50,4 +50,4 @@ COPY ./data ./data
 COPY ./media ./media
 
 # start API server
-CMD ["./enso-darknet"]
+CMD ./sd-worker & ./enso-darknet
