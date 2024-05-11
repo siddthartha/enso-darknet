@@ -26,8 +26,12 @@ async fn main()
         .and(warp::get())
         .and_then(render_handler);
 
+    let download_route = warp::path("result")
+        .and(warp::fs::dir("./media/"));
+
     let routes = health_checker_route
         .or(render_route)
+        .or(download_route)
         .with(warp::log("api"));
 
     println!("🚀 Enso ML API server started successfully");
