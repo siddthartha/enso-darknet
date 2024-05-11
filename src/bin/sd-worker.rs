@@ -13,7 +13,7 @@ use enso_darknet::{
 pub async fn main() -> anyhow::Result<()>
 {
 
-    let client = Client::open("redis://redis:6379/").unwrap();
+    let client = Client::open(enso_darknet::redis_host()).unwrap();
     let mut connection = client.get_connection()?;
     let mut write_connection = client.get_connection()?;
     let mut pubsub_connection = connection.as_pubsub();

@@ -65,7 +65,7 @@ pub async fn render_handler(q: HashMap<String, String>) -> WebResult<impl Reply>
                 }
             };
 
-            let client = redis::Client::open("redis://redis:6379/").unwrap();
+            let client = redis::Client::open(enso_darknet::redis_host()).unwrap();
             let mut publish_conn = client.get_tokio_connection().await.unwrap();
 
             publish_conn.publish::<&str, &str, i8>(

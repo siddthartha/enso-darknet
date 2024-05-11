@@ -254,3 +254,18 @@ pub fn generate_uuid_v4() -> String
     let uuid = Uuid::from_u64_pair(low64_seed, high64_seed).to_string().clone();
     uuid
 }
+
+pub fn redis_host() -> String
+{
+    let _redis_host = std::env::var_os("ENSO_REDIS_HOST");
+
+    let redis_host = match _redis_host {
+        None => "redis://redis:6379/".to_string(),
+        Some(redis_host_var) => {
+            let redis_host = redis_host_var.into_string().unwrap();
+            redis_host.clone()
+        },
+    };
+
+    return redis_host;
+}
