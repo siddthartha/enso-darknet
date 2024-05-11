@@ -13,9 +13,13 @@ RUN apt-get update \
 ## Download libtorch binaries
 ##
 
-RUN wget https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-2.0.1%2Bcpu.zip \
-    && unzip ./libtorch-cxx11-abi-shared-with-deps-2.0.1+cpu.zip \
-    && rm -f ./libtorch-cxx11-abi-shared-with-deps-2.0.1+cpu.zip
+RUN wget https://download.pytorch.org/libtorch/cu118/libtorch-cxx11-abi-shared-with-deps-2.0.1%2Bcu118.zip \
+    && unzip libtorch-cxx11-abi-shared-with-deps-2.0.1+cu118.zip \
+    && rm -f libtorch-cxx11-abi-shared-with-deps-2.0.1+cu118.zip
+
+#RUN wget https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-2.0.1%2Bcpu.zip \
+#    && unzip ./libtorch-cxx11-abi-shared-with-deps-2.0.1+cpu.zip \
+#    && rm -f ./libtorch-cxx11-abi-shared-with-deps-2.0.1+cpu.zip
 
 ENV LIBTORCH=/enso-darknet/libtorch
 ARG LIBTORCH=/enso-darknet/libtorch
