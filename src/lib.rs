@@ -8,6 +8,8 @@ use tch::{nn::Module, Device, Kind, Tensor};
 pub mod models;
 
 pub const GUIDANCE_SCALE: f64 = 7.5;
+pub const DEFAULT_STEPS: u8 = 30;
+pub const STEPS_LIMIT: u8 = 50;
 pub const RENDER_QUEUE: &str = "render";
 pub const TASK_PREFIX: &str = "task";
 
