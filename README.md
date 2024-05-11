@@ -4,6 +4,9 @@ A simple asynchronuous json API for running `Stable Diffusion` generation tasks 
 
 > Pipeline based on examples from `LaurentMazare/diffusers-rs` crate.
 
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/siddthartha/enso-darknet/rust.yml?logo=rust&label=rust)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/siddthartha/enso-darknet/docker-image.yml)
+
 ## TODO:
 
 * put results to S3
