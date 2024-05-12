@@ -33,6 +33,7 @@ pub async fn main() -> anyhow::Result<()>
         let steps = request.clone().steps;
         let width = request.clone().width;
         let height = request.clone().height;
+        let intermediary_images = request.clone().intermediates;
 
         write_connection.set::<String, String, String>(
             format!("{}:{uuid}", TASK_PREFIX.to_string()).to_string(),
@@ -55,7 +56,7 @@ pub async fn main() -> anyhow::Result<()>
             final_image: format!("./media/{}.jpg", uuid.clone().to_string()),
             autocast: false,
             sd_version: StableDiffusionVersion::V2_1,
-            intermediary_images: true,
+            intermediary_images,
         };
 
         write_connection.set::<String, String, String>(

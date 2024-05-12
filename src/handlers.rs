@@ -62,6 +62,10 @@ pub async fn render_handler(q: HashMap<String, String>) -> WebResult<impl Reply>
                         (steps.parse::<u8>().unwrap() as u8)
                             .min(STEPS_LIMIT)
                     }
+                },
+                intermediates: match q.get("intermediates") {
+                    None => true,
+                    Some(intermediates) => { intermediates.parse::<bool>().unwrap() as bool }
                 }
             };
 
