@@ -46,7 +46,7 @@
         );
     }
 
-    function pullAndWait(uuid, timestep)
+    function pullAndWait(uuid, timestep, count)
     {
         let steps = parseInt(document.getElementById('steps').value);
 
@@ -55,8 +55,9 @@
             return;
         }
 
-        if (makeRequest(resultUrl(uuid, timestep), "HEAD").status === 200)
-        {
+        if (makeRequest(resultUrl(uuid, timestep), "HEAD").status === 200
+            || count > 10
+        ) {
             if (timestep === steps)
             {
                 result.setAttribute('src', resultUrl(uuid, timestep));
@@ -69,14 +70,14 @@
             result.style.display = 'block';
 
             setTimeout(function() {
-                pullAndWait(uuid, timestep + 1);
+                pullAndWait(uuid, timestep + 1, 0);
             }, 1500);
 
             return;
         }
 
         setTimeout(function() {
-            pullAndWait(uuid, timestep);
+            pullAndWait(uuid, timestep, count + 1);
         }, 2000);
     }
 
@@ -114,7 +115,7 @@
         const response = JSON.parse(renderResponse.responseText);
 
         setTimeout(function() {
-            pullAndWait(response.uuid, 1);
+            pullAndWait(response.uuid, 1, 0);
         }, 4000);
     }
 
