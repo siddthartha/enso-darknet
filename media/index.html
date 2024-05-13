@@ -17,7 +17,6 @@
     let prompt = document.getElementById('prompt');
     let result = document.getElementById('result');
     let runButton = document.getElementById('runButton');
-    let steps = parseInt(document.getElementById('steps').value);
 
     function sleep(milliseconds)
     {
@@ -49,6 +48,8 @@
 
     function pullAndWait(uuid, timestep)
     {
+        let steps = parseInt(document.getElementById('steps').value);
+
         if (timestep > steps)
         {
             return;
@@ -89,6 +90,8 @@
 
     function generate()
     {
+        let steps = parseInt(document.getElementById('steps').value);
+
         runButton.setAttribute('disabled', 'disabled');
 
         result.setAttribute('src', '/result/spinner.svg');
@@ -101,14 +104,17 @@
         if (renderResponse.status !== 200)
         {
             console.log(renderResponse.status + ': ' + renderResponse.statusText );
-        }
-        else
-        {
-            console.log(renderResponse.responseText);
-            const response = JSON.parse(renderResponse.responseText);
 
-            pullAndWait(response.uuid, 1);
+            return;
         }
+
+        console.log(renderResponse.responseText);
+
+        const response = JSON.parse(renderResponse.responseText);
+
+        setTimeout(function() {
+            pullAndWait(response.uuid, 1);
+        }, 3000);
     }
 
 --></script>
