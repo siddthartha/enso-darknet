@@ -66,10 +66,11 @@
             }
 
             result.setAttribute('src', resultUrl(uuid, timestep));
+            result.style.display = 'block';
 
             setTimeout(function() {
                 pullAndWait(uuid, timestep + 1);
-            }, 2000);
+            }, 1500);
 
             return;
         }
@@ -114,7 +115,7 @@
 
         setTimeout(function() {
             pullAndWait(response.uuid, 1);
-        }, 3000);
+        }, 4000);
     }
 
 --></script>
