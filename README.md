@@ -1,30 +1,27 @@
-# enso-darknet
+# enso-ml-net
 
-A simple asynchronuous json API for running `Stable Diffusion` generation tasks via Redis queue.
+A PoC of simple asynchronuous json API for running ML-models tasks via Redis queue.
 
-> Pipeline based on examples from `LaurentMazare/diffusers-rs` crate.
+> Pipelines based on `LaurentMazare/tch-rs` wrapper crate for original PyTorch for CUDA 11.8 (https://pytorch.org/get-started/locally/).
+
 
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/siddthartha/enso-darknet/rust.yml?logo=rust&label=rust)
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/siddthartha/enso-darknet/docker-image.yml)
 
-## TODO:
-
-* put results to S3
-* add other various pipelines (OpenGPT etc.)
-
 ### Usage with RunPod
 
-* Create and run default Redis Pod from official image (`redis:latest` for example)
+* Create and run CPU Pod from official Redis image (`redis:latest` for example)
 * Create pod with Enso SD-2.1 community template (https://www.runpod.io/console/explore/2105h5uma5)
 * Set `ENSO_REDIS_HOST=redis://{REDIS_POD_URL}:{REDIS_POD_EXTERNAL_PORT}` variable in that template
-* Get `/render/?prompt=some+prompt` to start processing
-* Take `uuid` field from response
-* Get `/result/{uuid}.jpg` or `/result/{uuid}-{step}.jpg`
+* Now you can put the task to queue:
+  * Get `/render/?prompt=some+prompt&steps=25&height=1024&width=768` to start processing
+  * Take `uuid` field from response
+  * Try to get `/result/{uuid}.jpg` while it becomes ready or try to see intermediatory timesteps like `/result/{uuid}-{step}.jpg`
+  * Also any such pod from this template can be tested by hands via simple web gui `/result/index.html`
 
 ### Usage in docker
 
 * `docker pull dogen/enso-darknet:latest`
-* `./download-weights.sh`
 * Run job via CLI interface:
 ```
 docker run \
@@ -43,6 +40,15 @@ docker run \
   * `docker-compose up -d`
   * `wget http://localhost:80/api/render/?prompt=Some%20prompt`
 
+### TODO:
+
+* upgrade all dependencies (CUDA `12.1`, libtorch `2.3.0`, tch-rs `0.16`)
+* refactore API to REST-like
+* put results to S3
+* multiple GPU devices support
+* load balancing
+* migrate to candle framework (?)
+* add other various pipelines (OpenGPT, Yolo, etc..)
 
 # You can donate my work on this repository
 
