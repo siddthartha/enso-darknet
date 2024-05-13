@@ -1,0 +1,116 @@
+<html lang="en">
+<head>
+    <title>Stable Diffusion 2.1 on Rust</title>
+</head>
+<body>
+<label for="prompt">Prompt:</label>
+<input id="prompt" value="some prompt" />
+<label for="steps">Time steps:</label>
+<input id="steps" value="3" />
+<button id="runButton" onclick="generate()">Generate</button>
+
+<hr />
+
+<img id="result" alt="result"  src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs%3D" />
+
+<script><!--
+    let prompt = document.getElementById('prompt');
+    let result = document.getElementById('result');
+    let runButton = document.getElementById('runButton');
+    let steps = parseInt(document.getElementById('steps').value);
+
+    function sleep(milliseconds)
+    {
+        const date = Date.now();
+        let currentDate = null;
+
+        do {
+            currentDate = Date.now();
+        }
+        while (currentDate - date < milliseconds);
+    }
+
+    function makeRequest(url, requestType = "GET")
+    {
+        let xhr = new XMLHttpRequest();
+        xhr.open(requestType, url, false);
+        xhr.send();
+
+        return xhr;
+    }
+
+    function makeApiRequest(url, requestType = "GET")
+    {
+        return JSON.parse(
+            makeRequest(url, requestType)
+                .responseText
+        );
+    }
+
+    function pullAndWait(uuid, timestep)
+    {
+        if (timestep > steps)
+        {
+            return;
+        }
+
+        if (makeRequest(resultUrl(uuid, timestep), "HEAD").status === 200)
+        {
+            if (timestep === steps)
+            {
+                result.setAttribute('src', resultUrl(uuid, timestep));
+                runButton.removeAttribute('disabled');
+
+                return;
+            }
+
+            result.setAttribute('src', resultUrl(uuid, timestep));
+
+            setTimeout(function() {
+                pullAndWait(uuid, timestep + 1);
+            }, 2000);
+
+            return;
+        }
+
+        setTimeout(function() {
+            pullAndWait(uuid, timestep);
+        }, 2000);
+    }
+
+    function resultUrl(uuid, timestep = 0)
+    {
+        if (timestep > 0) {
+            return '/result/' + uuid + '-' + timestep + '.jpg';
+        } else {
+            return '/result/' + uuid + '.jpg';
+        }
+    }
+
+    function generate()
+    {
+        runButton.setAttribute('disabled', 'disabled');
+
+        result.setAttribute('src', '/result/spinner.svg');
+
+        let renderResponse = makeRequest('/api/render?'
+            + 'prompt=' + encodeURI(prompt.value)
+            + '&steps=' + steps
+        );
+
+        if (renderResponse.status !== 200)
+        {
+            console.log(renderResponse.status + ': ' + renderResponse.statusText );
+        }
+        else
+        {
+            console.log(renderResponse.responseText);
+            const response = JSON.parse(renderResponse.responseText);
+
+            pullAndWait(response.uuid, 1);
+        }
+    }
+
+--></script>
+</body>
+</html>
