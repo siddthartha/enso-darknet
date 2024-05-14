@@ -26,6 +26,7 @@ ARG LIBTORCH=/enso-darknet/libtorch
 
 COPY ./Cargo.toml ./Cargo.toml
 COPY ./src ./src
+COPY ./gui ./gui
 
 ENV LD_LIBRARY_PATH=${LIBTORCH}/lib:${LD_LIBRARY_PATH}
 ENV DEP_TCH_LIBTORCH_LIB=${LIBTORCH}/lib
@@ -40,9 +41,9 @@ RUN \
     && cp /enso-darknet/target/release/sd-worker ./sd-worker
 
 # cleanup resources needed for rebuild only
-RUN cargo clean \
-    && rm -rf ${CARGO_HOME}/registry/* \
-    && rm -rf /enso-darknet/libtorch/include
+#RUN cargo clean \
+#    && rm -rf ${CARGO_HOME}/registry/* \
+#    && rm -rf /enso-darknet/libtorch/include
 
 COPY ./download-weights.sh ./download-weights.sh
 

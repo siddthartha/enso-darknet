@@ -17,7 +17,7 @@ A PoC of simple asynchronuous json API for running ML-models tasks via Redis que
   * Get `/render/?prompt=some+prompt&steps=25&height=1024&width=768` to start processing
   * Take `uuid` field from response
   * Try to get `/result/{uuid}.jpg` while it becomes ready or try to see intermediatory timesteps like `/result/{uuid}-{step}.jpg`
-  * Also any such pod from this template can be tested by hands via simple web gui `/result/index.html`
+  * Also any such pod from this template can be tested by hands via simple debug GUI on `https://pod-url/`
 
 ### Usage in docker
 
