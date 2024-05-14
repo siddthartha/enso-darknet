@@ -38,12 +38,12 @@
 <body>
 <div class="row around-xs">
     <div class="col-xs-3">
-            <blockquote style="margin-top: 0;">
-                GPU RunPod<br />
-                Stable Diffusion v.2.1<br />
-                CUDA 11.8<br />
-                libtorch 2.1.0
-            </blockquote>
+        <blockquote style="margin-top: 0;">
+            GPU RunPod<br />
+            Stable Diffusion v.2.1<br />
+            CUDA 11.8<br />
+            libtorch 2.1.0
+        </blockquote>
     </div>
     <div class="col-xs-3">
         <label for="prompt">Prompt:</label>
@@ -60,20 +60,15 @@
         <input id="seed" value="" style="width:100%;"/><br /><br />
 
     </div>
-
     <div class="col-xs-3">
         <button id="runButton" onclick="generate()">Run task</button>
     </div>
 </div>
 <div class="row around-xs">
     <div class="col-xs-12">
-        <span id="status"></span><br />
+        <blockquote id="status" style="margin-top: 0;"></blockquote>
     </div>
 </div>
-<div class="row around-xs">
-    <hr />
-</div>
-
 <div class="row around-xs">
     <div class="col-xs-6">
         <img id="result" alt="result"  src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs%3D" />
@@ -175,7 +170,7 @@
 
         runButton.setAttribute('disabled', 'disabled');
 
-        result.setAttribute('src', '/result/spinner-white.svg');
+        result.setAttribute('src', '/gui/spinner-white.svg');
 
         let requestUrl = '/api/render?' + new URLSearchParams([
             ['prompt', encodeURI(prompt.value)],

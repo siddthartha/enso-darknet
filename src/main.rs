@@ -28,15 +28,18 @@ async fn main()
 
     let root_route = warp::path::end()
         .and(warp::get())
-        .and(warp::fs::dir("./gui/"));
-
+        .and(warp::fs::file("./gui/index.html"));
 
     let download_route = warp::path("result")
         .and(warp::fs::dir("./media/"));
 
+    let gui_route = warp::path("gui")
+        .and(warp::fs::dir("./gui/"));
+
     let routes = health_checker_route
         .or(render_route)
         .or(download_route)
+        .or(gui_route)
         .or(root_route)
         .with(warp::log("api"));
 
