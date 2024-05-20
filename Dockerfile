@@ -41,9 +41,9 @@ RUN \
     && cp /enso-darknet/target/release/sd-worker ./sd-worker
 
 # cleanup resources needed for rebuild only
-#RUN cargo clean \
-#    && rm -rf ${CARGO_HOME}/registry/* \
-#    && rm -rf /enso-darknet/libtorch/include
+RUN cargo clean \
+    && rm -rf ${CARGO_HOME}/registry/* \
+    && rm -rf /enso-darknet/libtorch/include
 
 COPY ./download-weights.sh ./download-weights.sh
 
