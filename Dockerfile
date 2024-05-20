@@ -51,4 +51,4 @@ COPY ./data ./data
 COPY ./media ./media
 
 # start API server
-CMD ./sd-worker & ./enso-darknet
+CMD ./download-weights.sh && (./sd-worker & ./enso-darknet)

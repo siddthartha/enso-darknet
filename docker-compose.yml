@@ -6,8 +6,6 @@ services:
     image: dogen/enso-darknet:latest
     env_file:
       - ./.env
-    environment:
-      - SD_VERSION=v2_1
     ports:
       - "80:80"
     command: >

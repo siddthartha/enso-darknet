@@ -9,6 +9,7 @@ pub struct SDRequest {
     pub height: u32,
     pub steps: u8,
     pub intermediates: bool,
+    pub version: u8,
 }
 
 #[derive(Serialize)]

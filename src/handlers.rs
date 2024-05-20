@@ -65,7 +65,11 @@ pub async fn render_handler(q: HashMap<String, String>) -> WebResult<impl Reply>
                 },
                 intermediates: match q.get("intermediates") {
                     None => true,
-                    Some(intermediates) => { intermediates.parse::<bool>().unwrap() as bool }
+                    Some(intermediates) => { intermediates.parse::<bool>().unwrap() as bool },
+                },
+                version: match q.get("version") {
+                    None => 1,
+                    Some(version) => { version.parse::<u8>().unwrap() as u8 },
                 }
             };
 

@@ -34,6 +34,7 @@ pub async fn main() -> anyhow::Result<()>
         let width = request.clone().width;
         let height = request.clone().height;
         let intermediary_images = request.clone().intermediates;
+        let version = request.clone().version;
 
         write_connection.set::<String, String, String>(
             format!("{}:{uuid}", TASK_PREFIX.to_string()).to_string(),
@@ -55,7 +56,10 @@ pub async fn main() -> anyhow::Result<()>
             num_samples: 0,
             final_image: format!("./media/{}.jpg", uuid.clone().to_string()),
             autocast: false,
-            sd_version: StableDiffusionVersion::V2_1,
+            sd_version: match version {
+                1 => StableDiffusionVersion::V1_5,
+                _ => StableDiffusionVersion::V2_1,
+            },
             intermediary_images,
         };
 
@@ -65,7 +69,8 @@ pub async fn main() -> anyhow::Result<()>
         ).unwrap();
 
         let final_image = task.final_image.clone();
-        let image: Tensor = StableDiffusionTask::run(task, seed)?;
+
+        let image: Tensor = task.run(seed)?;
 
         let final_image = StableDiffusionTask::output_filename(final_image.as_str(), 1, 0, None);
 

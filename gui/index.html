@@ -40,7 +40,7 @@
     <div class="col-xs-3">
         <blockquote style="margin-top: 0;">
             GPU RunPod<br />
-            Stable Diffusion v.2.1<br />
+            Stable Diffusion <label>version</label><select id="version" style="width:5em;"><option value="1" selected="selected">1.5</option><option value="2">2.1</option></select><br />
             CUDA 11.8<br />
             libtorch 2.1.0
         </blockquote>
@@ -167,6 +167,7 @@
         let height = parseInt(document.getElementById('height').value);
         let steps = parseInt(document.getElementById('steps').value);
         let seed = document.getElementById('seed').value;
+        let version = parseInt(document.getElementById('version').value);
 
         runButton.setAttribute('disabled', 'disabled');
 
@@ -177,6 +178,7 @@
             ['steps', steps],
             ['width', width],
             ['height', height],
+            ['version', version],
             ...((seed !== '') ? [['seed', seed]] : [])
         ]).toString();
 

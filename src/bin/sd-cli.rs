@@ -66,7 +66,7 @@ pub struct SDCliArgs {
     #[arg(long, action)]
     pub autocast: bool,
 
-    #[arg(long, value_enum, default_value = "v2-1")]
+    #[arg(long, value_enum, default_value = "v1-5")]
     sd_version: StableDiffusionVersion,
 
     /// Generate intermediary images at each step.
@@ -94,8 +94,9 @@ fn run(args: SDCliArgs, seed: i64) -> anyhow::Result<()>
         sd_version: args.sd_version,
         intermediary_images: args.intermediary_images
     };
+
     let final_image = task.final_image.clone();
-    let image: Tensor = StableDiffusionTask::run(task, seed)?;
+    let image: Tensor = task.run(seed)?;
 
     let final_image = StableDiffusionTask::output_filename(final_image.as_str(), 1, 0, None);
 
