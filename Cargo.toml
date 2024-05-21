@@ -57,7 +57,7 @@ required-features = ["tch"]
 
 [[bin]]
 name = "candle-sd-worker"
-path = "src/main-candle.rs"
+path = "./src/main-candle.rs"
 required-features = ["candle"]
 
 

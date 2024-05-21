@@ -40,7 +40,9 @@ RUN \
     && cp /enso-darknet/target/release/sd-cli ./sd-cli \
     && cp /enso-darknet/target/release/sd-worker ./sd-worker
 
+
 # cleanup resources needed for rebuild only
+# NOT FOR CANDLE FEATURE !
 RUN cargo clean \
     && rm -rf ${CARGO_HOME}/registry/* \
     && rm -rf /enso-darknet/libtorch/include
@@ -52,3 +54,9 @@ COPY ./media ./media
 
 # dowload all weights, 1 worker and API server
 CMD ./download-weights.sh && (./sd-worker & ./enso-darknet)
+
+# CANDLE FEATURE BUILD AND RUN on cloud side (with GPU installed)
+#CMD \
+#    cargo build --release --no-default-features --features candle \
+#    && cp /enso-darknet/target/release/candle-sd-worker ./candle-sd-worker \
+#    && ./candle-sd-worker
