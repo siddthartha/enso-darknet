@@ -50,5 +50,5 @@ COPY ./download-weights.sh ./download-weights.sh
 COPY ./data ./data
 COPY ./media ./media
 
-# start API server
+# dowload all weights, 1 worker and API server
 CMD ./download-weights.sh && (./sd-worker & ./enso-darknet)
