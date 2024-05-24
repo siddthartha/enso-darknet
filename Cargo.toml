@@ -31,15 +31,8 @@ pretty_env_logger = "0.5.0"
 warp = "0.3.7"
 redis = { version = "0.22.2", features = ["tokio-comp"] }
 
-tch = { version = "0.13.0", features = ["cpython", "image", "regex"], optional = true }
-diffusers = { git = "https://github.com/LaurentMazare/diffusers-rs.git", branch = "main", features = ["clap"], optional = true }
-
-candle-core = { git = "https://github.com/huggingface/candle.git", version = "0.5.1", features = ["cuda"], optional = true }
-
-[features]
-default = ["tch"]
-tch = ["dep:tch", "dep:diffusers"]
-candle = ["dep:candle-core"]
+tch = { version = "0.13.0", features = ["cpython", "image", "regex"] }
+diffusers = { git = "https://github.com/LaurentMazare/diffusers-rs.git", branch = "main", features = ["clap"] }
 
 [lib]
 crate-type = ["lib"]
@@ -48,18 +41,10 @@ bench = false
 [[bin]]
 name = "sd-cli"
 path = "./src/bin/sd-cli.rs"
-required-features = ["tch"]
 
 [[bin]]
 name = "sd-worker"
 path = "./src/bin/sd-worker.rs"
-required-features = ["tch"]
-
-[[bin]]
-name = "candle-sd-worker"
-path = "./src/main-candle.rs"
-required-features = ["candle"]
-
 
 [profile.release]
 opt-level = 'z'     # Optimize for size.
